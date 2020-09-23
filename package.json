@@ -1,0 +1,24 @@
+{
+  "name": "nest-sdm-nodejs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shawngmc/nest-sdm-nodejs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shawngmc/nest-sdm-nodejs/issues"
+  },
+  "homepage": "https://github.com/shawngmc/nest-sdm-nodejs#readme",
+  "dependencies": {
+    "cli": "^1.0.1",
+    "node-fetch": "^2.6.1"
+  }
+}

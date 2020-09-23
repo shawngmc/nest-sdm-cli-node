@@ -1,3 +1,8 @@
+# Config and session token files
+config.json
+token.json
+devices.json
+
 # Logs
 logs
 *.log
