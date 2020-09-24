@@ -1,1 +1,1 @@
-# nest-sdm-nodejs
+# nest-sdm-cli-node
