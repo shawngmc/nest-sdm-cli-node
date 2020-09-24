@@ -221,12 +221,16 @@ const main = async () => {
         storeDeviceList(deviceResponse);
         console.log(JSON.stringify(devices, "", 4));
     } else if (options.action == "get") {
-        
+        // Make sure device is valid
+        let deviceId = checkDeviceRef(options.device);
+
+        result = await getDeviceInfoByDeviceId(deviceId);
+        console.log(result);
     } else if (options.action == "command") {
         // Make sure device is valid
         let deviceId = checkDeviceRef(options.device);
 
-        // TODO: Make sure device has those traits
+        // Make sure device has those traits
         checkDeviceTrait(deviceId, options.trait);
 
         result = await executeCommand("sdm.devices.commands." + options.trait + "." + options.command, {}, deviceId);
