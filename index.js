@@ -10,7 +10,7 @@ let options = cli.parse({
 	device: [ 'd', 'A device display name or id to act upon', 'string', undefined],
 	trait: [ 't', 'A device trait to act upon', 'string', undefined],
     command: [ 'c', 'What action to perform on that device for the selected trait', 'string', undefined ],
-    params: ['p', 'A json string to pass to the command as params', {}]
+    params: ['p', 'A json string to pass to the command as params', "{}"]
 });
 
 let config = JSON.parse(fs.readFileSync('config.json'));
@@ -285,7 +285,15 @@ const main = async () => {
             // Make sure device has those traits
             checkDeviceTrait(deviceId, options.trait);
 
-            result = await executeCommand("sdm.devices.commands." + options.trait + "." + options.command, options.params, deviceId);
+            // Parse Params
+            let params = {};
+            try {
+                params = JSON.parse(options.params);
+            } catch (error) {
+                cli.fatal("Could not parse given params.");
+            }
+
+            result = await executeCommand("sdm.devices.commands." + options.trait + "." + options.command, params, deviceId);
             console.log(result);
         }
     }
