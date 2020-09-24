@@ -2,13 +2,15 @@
 const fetch = require("node-fetch");
 const fs = require('fs');
 const cli = require('cli');
+const inquirer = require('inquirer');
 
 cli.enable("status", "version");
 let options = cli.parse({
-	action: [ 'a', 'An action to perform - list, get, or executeCommand', 'string', 'list' ],
-	device: [ 'd', 'A device id to act upon', 'string', undefined],
+	action: [ 'a', 'An action to perform - configure, list, get, or command', 'string', 'list' ],
+	device: [ 'd', 'A device display name or id to act upon', 'string', undefined],
 	trait: [ 't', 'A device trait to act upon', 'string', undefined],
-	command: [ 'c', 'What action to perform on that device for the selected trait', 'string', undefined ]
+    command: [ 'c', 'What action to perform on that device for the selected trait', 'string', undefined ],
+    params: ['p', 'A json string to pass to the command as params', "{}"]
 });
 
 let config = JSON.parse(fs.readFileSync('config.json'));
@@ -211,30 +213,89 @@ const main = async () => {
     } else {
         cli.debug('Using cached access token...');
     }
-    if (devices.length == 0) {
-        let deviceResponse = await listDevices();
-        storeDeviceList(deviceResponse);
-    }
 
-    if (options.action == "list") {
-        let deviceResponse = await listDevices();
-        storeDeviceList(deviceResponse);
-        console.log(JSON.stringify(devices, "", 4));
-    } else if (options.action == "get") {
-        // Make sure device is valid
-        let deviceId = checkDeviceRef(options.device);
+    if (options.action == "configure") {
+        inquirer
+            .prompt([
+                {
+                    "type": 'input',
+                    "name": 'client_id',
+                    "message": "What is your client ID?",
+                    "validate": function(input) {
+                        return input.length > 0;
+                    }
+                },
+                {
+                    "type": 'input',
+                    "name": 'client_secret',
+                    "message": "What is your client secret?",
+                    "validate": function(input) {
+                        return input.length > 0;
+                    }
+                },
+                {
+                    "type": 'input',
+                    "name": 'sdm_client_id',
+                    "message": "What is your SDM client ID?",
+                    "validate": function(input) {
+                        return input.length > 0;
+                    }
+                },
+                {
+                    "type": 'input',
+                    "name": 'refresh_token',
+                    "message": "What is your refresh token?",
+                    "validate": function(input) {
+                        return input.length > 0;
+                    }
+                }
+            ])
+            .then(answers => {
+                fs.writeFileSync('config.json', JSON.stringify(answers, "", 4));
+                console.log("Configuration written!");
+            })
+            .catch(error => {
+                if(error.isTtyError) {
+                // Prompt couldn't be rendered in the current environment
+                } else {
+                // Something else when wrong
+                console.log(error);
+                }
+            });
+    } else {
+        if (devices.length == 0) {
+            let deviceResponse = await listDevices();
+            storeDeviceList(deviceResponse);
+        }
+        
+        if (options.action == "list") {
+            let deviceResponse = await listDevices();
+            storeDeviceList(deviceResponse);
+            console.log(JSON.stringify(devices, "", 4));
+        } else if (options.action == "get") {
+            // Make sure device is valid
+            let deviceId = checkDeviceRef(options.device);
 
-        result = await getDeviceInfoByDeviceId(deviceId);
-        console.log(result);
-    } else if (options.action == "command") {
-        // Make sure device is valid
-        let deviceId = checkDeviceRef(options.device);
+            result = await getDeviceInfoByDeviceId(deviceId);
+            console.log(result);
+        } else if (options.action == "command") {
+            // Make sure device is valid
+            let deviceId = checkDeviceRef(options.device);
 
-        // Make sure device has those traits
-        checkDeviceTrait(deviceId, options.trait);
+            // Make sure device has those traits
+            checkDeviceTrait(deviceId, options.trait);
 
-        result = await executeCommand("sdm.devices.commands." + options.trait + "." + options.command, {}, deviceId);
-        console.log(result);
+            // Parse Params
+            let params = {};
+            try {
+                params = JSON.parse(options.params);
+            } catch (error) {
+                cli.fatal("Could not parse given params.");
+            }
+
+            result = await executeCommand("sdm.devices.commands." + options.trait + "." + options.command, params, deviceId);
+            console.log(result);
+        }
     }
 }
 
