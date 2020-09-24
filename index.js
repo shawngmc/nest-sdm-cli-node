@@ -1,10 +1,11 @@
+#!/usr/bin/env node
 const fetch = require("node-fetch");
 const fs = require('fs');
 const cli = require('cli');
 
 cli.enable("status", "version");
 let options = cli.parse({
-	action: [ 'a', 'An action to perform', 'string', 'list' ],
+	action: [ 'a', 'An action to perform - list, get, or executeCommand', 'string', 'list' ],
 	device: [ 'd', 'A device id to act upon', 'string', undefined],
 	trait: [ 't', 'A device trait to act upon', 'string', undefined],
 	command: [ 'c', 'What action to perform on that device for the selected trait', 'string', undefined ]

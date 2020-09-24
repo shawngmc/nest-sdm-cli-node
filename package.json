@@ -1,8 +1,9 @@
 {
-  "name": "nest-sdm-cli-node",
+  "name": "nest-sdm",
   "version": "0.1.1",
   "description": "",
   "main": "index.js",
+  "bin": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
