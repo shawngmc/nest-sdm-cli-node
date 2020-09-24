@@ -1,6 +1,6 @@
 {
   "name": "nest-sdm",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A quick command line tool to use the new Nest Device Access API.",
   "main": "index.js",
   "bin": {
