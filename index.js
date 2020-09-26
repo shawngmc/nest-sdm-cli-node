@@ -160,6 +160,7 @@ const executeCommand = async (command, params, deviceId) => {
 
         const url = "https://smartdevicemanagement.googleapis.com/v1/enterprises/" + config.sdm_client_id + "/devices/" + deviceId + ":executeCommand";
         console.log(url);
+        console.log(body);
         const opts = {
             method: "POST",
             headers: {
@@ -168,6 +169,7 @@ const executeCommand = async (command, params, deviceId) => {
             },
             body: JSON.stringify(body)
         };
+        console.log(opts);
         const response = await fetch(url, opts);
         const json = await response.json();
         return json;
@@ -288,6 +290,7 @@ const main = async () => {
             // Parse Params
             let params = {};
             try {
+                console.log(options.params);
                 params = JSON.parse(options.params);
             } catch (error) {
                 cli.fatal("Could not parse given params.");

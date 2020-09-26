@@ -1,0 +1,58 @@
+{
+  "name": "nest-sdm",
+  "description": "A quick command line tool to use the new Nest Device Access API.",
+  "version": "0.1.5",
+  "author": "Shawn McNaughton (shawngmc@gmail.com)",
+  "bin": {
+    "nest-sdm": "./bin/run"
+  },
+  "bugs": "https://github.com/shawngmc/nest-sdm-cli-node/issues",
+  "dependencies": {
+    "@oclif/command": "^1.8.0",
+    "@oclif/config": "^1.17.0",
+    "@oclif/plugin-help": "^3.2.0",
+    "inquirer": "^7.3.3",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
+    "@oclif/test": "^1.2.7",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-oclif": "^3.1.0",
+    "globby": "^10.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^14.1.1",
+    "rimraf": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/shawngmc/nest-sdm-cli-node",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "nest-sdm",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "shawngmc/nest-sdm-cli-node",
+  "scripts": {
+    "postpack": "rimraf oclif.manifest.json",
+    "posttest": "eslint .",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}
